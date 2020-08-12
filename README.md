@@ -19,14 +19,13 @@ The design of the Chatbot model is based on the ***mulilayer-bidirectional seq2s
 
 
 
-### **Abstract**
+### **Working**
 
 ---
 **ENCODER**
 
 1.   The input to the Encoder class were the ***tokenized sequences*** obtained using the keras ***Tokenizer class*** which were then padded to certain ***maximum length (18)*** with keras ***pad_sequences function***.
-2.   Inside the Encoder class the tokenized and padded inputs were embedded into 300 dimension vectors using the pre-trained ***Glove word embeddings*** and then passed to the bi-directional LSTM layers with ***return_states and return_sequences*** parameters of each layer set to ***True*** so that both the sequences and states of each layer can be passed to the succedding layer as input and initial states.
-
+2.   Inside the Encoder class the tokenized and padded inputs were embedded into 300 dimension vectors using the pre-trained ***en_vectors_web_lg word embeddings*** and then passed to the bi-directional LSTM layers with ***return_states and return_sequences*** parameters of each layer set to ***True*** so that both the sequences and states of each layer can be passed to the succedding layer as input and initial states.
 3.   The states of last layer of encoder were summed manually and passed as initial state to decoder.
 
 
@@ -35,9 +34,8 @@ The design of the Chatbot model is based on the ***mulilayer-bidirectional seq2s
 
 **DECODER**
 
-1.   Since the output in the Decoder class is generated at the each step therefore the input to the decoder is a ***single tokenized "sos"*** (start of string) token only which is passed through 2 stacked LSTM layers with return_states and return_sequences parameters set to true. 
+1.   Since the output in the Decoder class is generated at the each step therefore the input to the decoder is a ***single tokenized "sos"*** (start of string) token only which is passed through 2 stacked LSTM layers after being embedded into 300 dimension vector with return_states and return_sequences parameters set to true. 
 2.   The ***Context Vector*** *obtained by applying Bahdanau Attention using hidden state 'h' of previous layer and output of encoder class* is concatenated with the previous layer output and inputted to the last LSTM layer which was further passed to the dense layer and the token is predicted.
-
 3.   This predicted token act as input for predictig next token of the sequence and same process continues until a "eos" (end of string) token is obtained or a certain maximum length (27) is reached.
 
 ### **Dataset**
@@ -58,7 +56,7 @@ Both the Text files of the Dataset are included in the repo.
 I used the google colab gpu to train the model(VGG16) with tensorflow version 2.2.0. However, for just using the model your PC CPU would be enough but you need -
 
 *   Spacy, and
-*   en_vectors_web_lg pre-trained vectors
+*   en_vectors_web_lg pre-trained word embedding vectors
 
 to be installed in your environment.
 
